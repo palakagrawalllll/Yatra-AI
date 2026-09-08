@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Agent — Itinerary Desk</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <div class="deskmat">
+        <div class="deskmat-grid"></div>
+    </div>
+
+    <main class="app-container">
+
+        <!-- ============ HERO : PASSPORT COVER ============ -->
+        <section class="hero-section">
+
+            <div class="header-row">
+                <div class="luggage-tag">
+                    <span class="tag-hole"></span>
+                    <span class="tag-eyebrow">Itinerary Desk</span>
+                    <span class="tag-code">TRAVEL AGENT&nbsp;/&nbsp;ISSUED</span>
+                </div>
+                <div class="theme-toggle-container">
+                    <button id="themeToggle" onclick="toggleTheme()" class="theme-toggle-btn" aria-label="Toggle Theme">
+                        <span class="toggle-icon">TA</span>
+                        <span class="toggle-text">Midnight Jetsetter</span>
+                    </button>
+                </div>
+            </div>
+
+            <h1 class="hero-title">
+                Where to,<br>
+                <span class="hero-title-accent">exactly?</span>
+            </h1>
+
+            <p class="hero-sub">
+                Tell the desk your route, dates and budget. A crew of planning
+                agents will price the flights, shortlist the hotels, and hand
+                you back a full itinerary — printable, like any good ticket.
+            </p>
+
+            <div class="hero-meta">
+                <div class="hero-meta-item">
+                    <span class="meta-label">Powered by</span>
+                    <span class="meta-value">LangGraph · Multi‑Agent</span>
+                </div>
+                <div class="hero-meta-divider"></div>
+                <div class="hero-meta-item">
+                    <span class="meta-label">Sources</span>
+                    <span class="meta-value">Tavily · AviationStack</span>
+                </div>
+                <div class="hero-meta-divider"></div>
+                <div class="hero-meta-item status-live">
+                    <span class="status-dot"></span>
+                    <span class="meta-value">Desk open</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ THE TICKET (input form) ============ -->
+        <section class="ticket">
+
+            <div class="ticket-stub-main">
+                <div class="stub-header">
+                    <span class="stub-kicker">01 — Request</span>
+                    <h2>Describe the trip</h2>
+                </div>
+
+                <textarea
+                    id="userInput"
+                    placeholder="e.g. Plan a complete 7‑day Japan trip from Bangladesh — flights, hotels, sightseeing — all in under ৳2,00,000."
+                ></textarea>
+
+                <div class="quick-prompts">
+                    <span class="quick-prompts-label">Try:</span>
+                    <button onclick="setPrompt('Plan a complete 7 days Japan trip from Bangladesh including flights, hotels and sightseeing under 2 lakhs.')">Japan · 7d</button>
+                    <button onclick="setPrompt('Plan a 5 days Dubai trip from Dhaka with flights, hotels and sightseeing.')">Dubai · 5d</button>
+                    <button onclick="setPrompt('Plan a 7 days Thailand trip from Bangladesh with budget hotels and sightseeing.')">Thailand · 7d</button>
+                    <button onclick="setPrompt('Give me all country flight info.')">Flights · All</button>
+                </div>
+            </div>
+
+            <div class="perforation" aria-hidden="true"></div>
+
+            <div class="ticket-stub-side">
+                <div class="stub-side-top">
+                    <span class="stub-kicker">Boarding</span>
+                    <span class="stub-big">AI</span>
+                    <span class="stub-caption">Agent Desk</span>
+                </div>
+
+                <button id="sendBtn" onclick="sendMessage()">
+                    <span id="btnText">Issue Itinerary →</span>
+                    <span id="btnLoader" class="loader hidden"></span>
+                </button>
+
+                <p class="stub-hint">⌘ / Ctrl + Enter also works</p>
+            </div>
+        </section>
+
+        <section id="errorBox" class="error-box hidden"></section>
+
+        <!-- ============ RESULT : THE ISSUED E-TICKET ============ -->
+        <section id="resultSection" class="result-section hidden">
+
+            <div class="result-header">
+                <div>
+                    <span class="stub-kicker">02 — Issued</span>
+                    <h2>Your travel plan</h2>
+                </div>
+
+                <div class="result-actions">
+                    <button class="copy-btn" onclick="copyResult()">Copy text</button>
+                    <button class="download-btn" onclick="downloadPDF()">Download PDF</button>
+                </div>
+            </div>
+
+            <div class="result-ticket">
+
+                <div class="stamp" aria-hidden="true">ISSUED</div>
+
+                <div class="result-ticket-top">
+                    <div class="rt-brand">
+                        <span class="rt-brand-mark">TA</span>
+                        <span class="rt-brand-name">TRAVEL AGENT</span>
+                    </div>
+                    <div class="rt-code">
+                        <span class="meta-label">Reservation</span>
+                        <span id="threadInfo" class="rt-thread">Thread ID: —</span>
+                    </div>
+                </div>
+
+                <div class="barcode" aria-hidden="true"></div>
+
+                <div id="pdfContent" class="pdf-content">
+                    <h1 class="pdf-title">AI Travel Plan</h1>
+                    <div id="resultBox" class="result-box"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <span>Travel Agent Itinerary Desk</span>
+        <span class="footer-dot">·</span>
+        <span>FastAPI · LangGraph · Groq · PostgreSQL · Tavily · AviationStack</span>
+    </footer>
+
+    <!-- Markdown Renderer -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- PDF Download Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Your Custom JS -->
+    <script src="/static/script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,884 @@
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root {
+    --paper: #f2ead9;
+    --paper-deep: #e9dfc5;
+    --paper-line: rgba(29, 43, 58, 0.16);
+    --ink: #1d2b3a;
+    --ink-soft: #55606b;
+    --ink-faint: #8a8171;
+    --stamp-red: #b23a2e;
+    --teal: #2f6f63;
+    --gold: #a9822e;
+    --white: #fffdf7;
+    --shadow-rgb: 29, 43, 58;
+
+    --font-display: "Fraunces", ui-serif, Georgia, serif;
+    --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+    
+    --transition-speed: 0.3s;
+}
+
+body.theme-midnight {
+    --paper: #0a0f1d;
+    --paper-deep: #050811;
+    --paper-line: rgba(255, 255, 255, 0.08);
+    --ink: #f1f5f9;
+    --ink-soft: #94a3b8;
+    --ink-faint: #475569;
+    --stamp-red: #f43f5e;
+    --teal: #38bdf8;
+    --gold: #fbbf24;
+    --white: #121b2e;
+    --shadow-rgb: 0, 0, 0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    min-height: 100vh;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+/* ============================================================
+   BACKDROP — a faint flight-plan chart, not a glow
+   ============================================================ */
+.deskmat {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: var(--paper);
+}
+
+.deskmat-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(var(--paper-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+    background-size: 42px 42px;
+    opacity: 0.35;
+    -webkit-mask-image: radial-gradient(circle at 50% 0%, black, transparent 72%);
+    mask-image: radial-gradient(circle at 50% 0%, black, transparent 72%);
+}
+
+.app-container {
+    width: min(920px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 64px 0 40px;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero-section {
+    margin-bottom: 44px;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 34px;
+}
+
+.luggage-tag {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 18px 9px 30px;
+    background: var(--white);
+    border: 1.5px solid var(--ink);
+    border-radius: 4px;
+    margin-bottom: 0;
+    transform: rotate(-1.5deg);
+    box-shadow: 3px 4px 0 var(--paper-deep), 3px 4px 0 1px var(--ink);
+    transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease, transform 0.2s ease;
+}
+
+.luggage-tag:hover {
+    transform: rotate(-1.5deg) translateY(-2px);
+}
+
+.theme-toggle-container {
+    display: flex;
+    align-items: center;
+}
+
+.theme-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1.5px solid var(--ink);
+    background: var(--white);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--paper-deep), 3px 3px 0 1.5px var(--ink);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.theme-toggle-btn:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--paper-deep), 4px 4px 0 1.5px var(--ink);
+}
+
+.theme-toggle-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--paper-deep), 1px 1px 0 1.5px var(--ink);
+}
+
+.tag-hole {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+}
+
+.tag-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--stamp-red);
+    font-weight: 600;
+}
+
+.tag-code {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+}
+
+.hero-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2.6rem, 7vw, 4.6rem);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 22px;
+}
+
+.hero-title-accent {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--teal);
+}
+
+.hero-sub {
+    max-width: 560px;
+    color: var(--ink-soft);
+    font-size: 1.06rem;
+    line-height: 1.7;
+    margin-bottom: 28px;
+}
+
+.hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--paper-line);
+}
+
+.hero-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.status-live {
+    flex-direction: row;
+    align-items: center;
+    gap: 7px;
+}
+
+.meta-label {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+}
+
+.meta-value {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--ink);
+}
+
+.hero-meta-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--paper-line);
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 0 3px rgba(47, 111, 99, 0.18);
+}
+
+/* ============================================================
+   THE TICKET — main input card
+   ============================================================ */
+.ticket {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 210px;
+    background: var(--white);
+    border: 1.5px solid var(--ink);
+    border-radius: 14px;
+    box-shadow: 6px 6px 0 var(--paper-deep), 6px 6px 0 1.5px var(--ink);
+}
+
+.ticket-stub-main {
+    padding: 30px 32px;
+}
+
+.stub-kicker {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--stamp-red);
+    margin-bottom: 6px;
+}
+
+.stub-header h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin-bottom: 18px;
+    color: var(--ink);
+}
+
+textarea {
+    width: 100%;
+    min-height: 128px;
+    resize: vertical;
+    border: 1.5px solid var(--paper-line);
+    border-radius: 10px;
+    background: var(--paper);
+    color: var(--ink);
+    padding: 16px 18px;
+    font-family: var(--font-body);
+    font-size: 0.98rem;
+    line-height: 1.6;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+textarea:focus {
+    border-color: var(--teal);
+    background: var(--white);
+}
+
+textarea::placeholder {
+    color: var(--ink-faint);
+}
+
+.quick-prompts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.quick-prompts-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    margin-right: 2px;
+}
+
+.quick-prompts button {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    border: 1px solid var(--paper-line);
+    background: var(--paper);
+    color: var(--ink-soft);
+    border-radius: 999px;
+    padding: 7px 13px;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.quick-prompts button:hover {
+    border-color: var(--teal);
+    color: var(--teal);
+    background: var(--white);
+}
+
+/* perforation seam between the two stubs */
+.perforation {
+    position: relative;
+    width: 0;
+    border-left: 1.5px dashed var(--ink);
+}
+
+.perforation::before,
+.perforation::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    transform: translateX(-50%);
+}
+
+.perforation::before { top: -11px; }
+.perforation::after  { bottom: -11px; }
+
+.ticket-stub-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    padding: 28px 20px;
+    background: var(--ink);
+    border-radius: 0 12.5px 12.5px 0;
+}
+
+.stub-side-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--paper);
+}
+
+.stub-side-top .stub-kicker {
+    color: var(--gold);
+}
+
+.stub-big {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2.6rem;
+    line-height: 1;
+    margin: 4px 0;
+}
+
+.stub-caption {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: rgba(242, 234, 217, 0.6);
+    letter-spacing: 0.04em;
+}
+
+#sendBtn {
+    width: 100%;
+    border: none;
+    border-radius: 9px;
+    padding: 14px 10px;
+    background: var(--gold);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: 0.18s ease;
+    margin: 18px 0 10px;
+}
+
+#sendBtn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+}
+
+#sendBtn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.stub-hint {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: rgba(242, 234, 217, 0.5);
+}
+
+/* ============================================================
+   ERROR — a rejection stamp, not a generic alert box
+   ============================================================ */
+.error-box {
+    margin-top: 24px;
+    padding: 16px 20px;
+    border-radius: 10px;
+    background: #f7e9e6;
+    border: 1.5px solid var(--stamp-red);
+    color: #7a2a20;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.error-box::before {
+    content: "⚠ Desk could not issue this request — ";
+    font-weight: 600;
+    color: var(--stamp-red);
+}
+
+/* ============================================================
+   RESULT — the issued e-ticket
+   ============================================================ */
+.result-section {
+    margin-top: 34px;
+}
+
+.result-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.result-header h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.7rem;
+    color: var(--ink);
+}
+
+.result-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.copy-btn,
+.download-btn {
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.86rem;
+    transition: 0.18s ease;
+}
+
+.copy-btn {
+    border: 1.5px solid var(--ink);
+    background: var(--white);
+    color: var(--ink);
+}
+
+.copy-btn:hover {
+    background: var(--paper-deep);
+}
+
+.download-btn {
+    border: 1.5px solid var(--teal);
+    background: var(--teal);
+    color: var(--white);
+}
+
+.download-btn:hover {
+    background: #275b51;
+}
+
+.result-ticket {
+    position: relative;
+    background: var(--white);
+    border: 1.5px solid var(--ink);
+    border-radius: 14px;
+    box-shadow: 6px 6px 0 var(--paper-deep), 6px 6px 0 1.5px var(--ink);
+    padding: 30px 32px 34px;
+    overflow: hidden;
+}
+
+.stamp {
+    position: absolute;
+    top: 26px;
+    right: 34px;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.14em;
+    color: var(--teal);
+    border: 2.5px solid var(--teal);
+    border-radius: 6px;
+    padding: 5px 12px;
+    transform: rotate(6deg);
+    opacity: 0;
+    transform-origin: center;
+}
+
+.result-section:not(.hidden) .stamp {
+    animation: stampIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s both;
+}
+
+@keyframes stampIn {
+    0% {
+        transform: rotate(30deg) scale(3);
+        opacity: 0;
+    }
+    70% {
+        transform: rotate(4deg) scale(0.95);
+        opacity: 0.9;
+    }
+    100% {
+        transform: rotate(6deg) scale(1);
+        opacity: 0.85;
+    }
+}
+
+.result-ticket-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+    border-bottom: 1px dashed var(--paper-line);
+}
+
+.rt-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rt-brand-mark {
+    font-size: 1.2rem;
+    color: var(--stamp-red);
+}
+
+.rt-brand-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    font-size: 1.15rem;
+    color: var(--ink);
+}
+
+.rt-code {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.rt-thread {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+}
+
+.barcode {
+    height: 26px;
+    margin-bottom: 22px;
+    background-image: repeating-linear-gradient(
+        90deg,
+        var(--ink) 0px,
+        var(--ink) 2px,
+        transparent 2px,
+        transparent 5px,
+        var(--ink) 5px,
+        var(--ink) 6px,
+        transparent 6px,
+        transparent 10px
+    );
+    opacity: 0.85;
+}
+
+.pdf-content {
+    background: var(--white);
+    color: var(--ink);
+}
+
+.pdf-title {
+    display: none;
+    font-family: var(--font-display);
+    color: var(--ink);
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.result-box {
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height: 1.7;
+}
+
+.result-box h1,
+.result-box h2,
+.result-box h3 {
+    font-family: var(--font-display);
+    color: var(--ink);
+    margin-top: 32px;
+    margin-bottom: 14px;
+    line-height: 1.3;
+    font-weight: 600;
+}
+
+.result-box h1:first-child,
+.result-box h2:first-child,
+.result-box h3:first-child {
+    margin-top: 0;
+}
+
+.result-box h1 {
+    font-size: 1.8rem;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+
+.result-box h2 {
+    font-size: 1.35rem;
+    border-left: 5px solid var(--teal);
+    padding: 10px 16px;
+    background: var(--paper-deep);
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 2px 4px rgba(var(--shadow-rgb), 0.02);
+    transition: all 0.2s ease;
+}
+
+.result-box h3 {
+    font-size: 1.12rem;
+    color: var(--teal);
+    border-bottom: 1px dashed var(--paper-line);
+    padding-bottom: 4px;
+    margin-top: 24px;
+}
+
+.result-box p {
+    margin-bottom: 16px;
+    line-height: 1.75;
+}
+
+.result-box ul,
+.result-box ol {
+    margin: 12px 0 20px 24px;
+}
+
+.result-box li {
+    margin-bottom: 10px;
+    line-height: 1.7;
+}
+
+.result-box strong {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.result-box hr {
+    border: none;
+    border-top: 1.5px dashed var(--paper-line);
+    margin: 30px 0;
+}
+
+.result-box table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 24px 0;
+    font-size: 0.92rem;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--paper-line);
+    box-shadow: 0 4px 6px -1px rgba(var(--shadow-rgb), 0.03);
+}
+
+.result-box th,
+.result-box td {
+    border-bottom: 1px solid var(--paper-line);
+    border-right: 1px solid var(--paper-line);
+    padding: 12px 14px;
+    text-align: left;
+    transition: background-color 0.2s ease;
+}
+
+.result-box th:last-child,
+.result-box td:last-child {
+    border-right: none;
+}
+
+.result-box tr:last-child td {
+    border-bottom: none;
+}
+
+.result-box th {
+    background: var(--paper-deep);
+    color: var(--ink);
+    font-weight: 700;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.result-box tr:hover td {
+    background: rgba(47, 111, 99, 0.04);
+}
+
+/* ============================================================
+   MISC
+   ============================================================ */
+.loader {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border: 2.5px solid rgba(29, 43, 58, 0.3);
+    border-top-color: var(--ink);
+    border-radius: 50%;
+    animation: spin 0.85s linear infinite;
+}
+
+.hidden {
+    display: none;
+}
+
+footer {
+    text-align: center;
+    color: var(--ink-faint);
+    padding: 36px 16px 44px;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.02em;
+}
+
+.footer-dot {
+    margin: 0 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   PRINT (PDF export)
+   ============================================================ */
+@media print {
+    body { background: var(--white); }
+
+    .hero-section,
+    .ticket,
+    footer,
+    .result-actions,
+    .rt-code,
+    .stamp {
+        display: none;
+    }
+
+    .result-ticket {
+        box-shadow: none;
+        border: none;
+    }
+
+    .pdf-title {
+        display: block;
+    }
+
+    /* Prevent awkward page-break splits inside key elements */
+    .result-box h1,
+    .result-box h2,
+    .result-box h3,
+    .result-box table,
+    .result-box tr,
+    .result-box li {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 760px) {
+    .app-container {
+        padding-top: 40px;
+        width: min(560px, calc(100% - 24px));
+    }
+
+    .ticket {
+        grid-template-columns: 1fr;
+        border-radius: 14px;
+    }
+
+    .ticket-stub-main {
+        padding: 24px;
+    }
+
+    .perforation {
+        border-left: none;
+        border-top: 1.5px dashed var(--ink);
+        height: 0;
+        width: auto;
+    }
+
+    .perforation::before,
+    .perforation::after {
+        top: 50%;
+        left: -11px;
+        transform: translateY(-50%);
+    }
+
+    .perforation::after {
+        left: auto;
+        right: -11px;
+    }
+
+    .ticket-stub-side {
+        border-radius: 0 0 12.5px 12.5px;
+        padding: 22px 20px;
+    }
+
+    .result-ticket {
+        padding: 24px 20px 28px;
+    }
+
+    .result-header {
+        align-items: flex-start;
+    }
+
+    .result-actions {
+        width: 100%;
+    }
+
+    .copy-btn,
+    .download-btn {
+        flex: 1;
+    }
+
+    .stamp {
+        top: 18px;
+        right: 20px;
+    }
+}
